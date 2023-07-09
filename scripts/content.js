@@ -29,7 +29,7 @@ const saveHighlight = (highlight) => {
 
 chrome.runtime.sendMessage(
   {
-    action: "getAllHighlights",
+    action: "getHighlightsForCurrentPage",
     data: {},
   },
   (highlights) => {
@@ -43,34 +43,12 @@ chrome.runtime.sendMessage(
   }
 );
 
-// fetch(
-//   "http://localhost:3000/atharva?url=https://en.wikipedia.org/wiki/Flow_(Japanese_band)"
-// )
-//   .then((data) => data.json())
-//   .then((resp) => {
-//     console.log({ resp });
-//   })
-//   .catch((e) => {
-//     console.log("fetch error: ", e);
-//   });
-
-// fetch(
-//   "http://localhost:3000/atharva?url=https://en.wikipedia.org/wiki/Flow_(Japanese_band)",
-//   {
-//     method: "POST",
-//     body: JSON.stringify({
-//       highlight: ["the band has released 39 singles"],
-//     }),
-//   }
-// )
-//   .then((resp) => {
-//     console.log("22", { resp });
-//   })
-//   .catch((e) => {
-//     console.log("fetch error 2: ", e);
-//   });
-
-// "permissions": ["scripting", "activeTab"]
-
-// "permissions": ["tabs", "scripting"],
-//  "host_permissions": ["http://*/*", "https://*/*"]
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  $("html, body").animate(
+    {
+      scrollTop: $(`*:contains(${message.data}):last`).offset().top,
+    },
+    400
+  );
+  return true;
+});

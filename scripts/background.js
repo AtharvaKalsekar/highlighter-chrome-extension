@@ -1,21 +1,7 @@
-// const getAllHighlights = (url, sendResponse) => {
-//   fetch(`http://localhost:3000/atharva?url=${url}`)
-//     .then((res) => res.json())
-//     .then((resp) => {
-//       sendResponse(resp[0].highlights);
-//     })
-//     .catch((err) => {
-//       console.log("Fetch error", err);
-//       sendResponse([]);
-//     });
-// };
-
 const utilSaveToStorge = (resp) => {
   resp.forEach((item) => {
     const { url } = item;
-    chrome.storage.local.set({ [url]: item }).then(() => {
-      console.log("Value is set");
-    });
+    chrome.storage.local.set({ [url]: item }).then(() => {});
   });
 };
 
@@ -32,7 +18,7 @@ const getAllHighlights = () => {
 
 const getHighlightsForCurrentPage = (url, sendResponse) => {
   chrome.storage.local.get([url]).then((result) => {
-    sendResponse(result[url].highlights);
+    sendResponse(result[url]?.highlights ?? []);
   });
 };
 
@@ -55,6 +41,9 @@ const saveHighlight = (pageUrl, highlight, sendResponse) => {
       .then((res) => res.json())
       .then((resp) => {
         utilSaveToStorge([resp]);
+        chrome.runtime.sendMessage({
+          action: "refreshSidePanel",
+        });
         sendResponse(true);
       })
       .catch((err) => {
@@ -66,7 +55,7 @@ const saveHighlight = (pageUrl, highlight, sendResponse) => {
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   const { url } = sender;
-  if (request.action === "getAllHighlights") {
+  if (request.action === "getHighlightsForCurrentPage") {
     getHighlightsForCurrentPage(url, sendResponse);
   } else if (request.action === "saveHighlight") {
     const { highlight } = request.data;

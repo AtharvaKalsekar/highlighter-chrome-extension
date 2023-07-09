@@ -19,5 +19,5 @@
   "side_panel": {
     "default_path": "side-panel.html"
   },
-  "permissions": ["storage", "sidePanel"]
+  "permissions": ["storage", "sidePanel", "tabs"]
 }
