@@ -1,8 +1,8 @@
 const Mark = window.Mark;
 
 window.onmouseup = (event) => {
-  const { altKey, ctrlKey } = event;
-  if (altKey && ctrlKey) {
+  const { altKey } = event;
+  if (altKey) {
     const markInstance = new Mark(document.body);
     const selectedText = document.getSelection().toString();
     markInstance.mark(selectedText, {
